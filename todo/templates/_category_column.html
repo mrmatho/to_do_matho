@@ -1,0 +1,18 @@
+<article class="column" id="category-{{ category['id'] }}" style="--category-color: {{ category['color'] }}">
+    <h2>{{ category['name'] }}</h2>
+    <ul class="task-list" id="category-{{ category['id'] }}-tasks">
+        {% for task in tasks %}
+            {% include '_task_item.html' %}
+        {% endfor %}
+    </ul>
+    <form hx-post="{{ url_for('tasks.create') }}"
+          hx-target="#category-{{ category['id'] }}-tasks"
+          hx-swap="beforeend"
+          hx-status:4xx="target:#category-{{ category['id'] }}-error swap:innerHTML"
+          hx-status:5xx="swap:none">
+        <input type="hidden" name="category_id" value="{{ category['id'] }}">
+        <input type="text" name="title" placeholder="New task" aria-label="New task in {{ category['name'] }}" required>
+        <button type="submit">Add</button>
+        <output id="category-{{ category['id'] }}-error" class="form-error"></output>
+    </form>
+</article>

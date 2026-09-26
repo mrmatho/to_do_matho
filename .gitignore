@@ -1,1 +1,3 @@
 todo.sqlite3
+instance/
+__pycache__/

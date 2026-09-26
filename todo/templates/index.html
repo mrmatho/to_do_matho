@@ -4,14 +4,10 @@
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <title>Matho's ToDo Home</title>
-    
+
     <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet" type="text/css" />
     <script src="https://unpkg.com/htmx.org@4.0.0/dist/htmx.min.js"></script>
-    <style>
-        div {
-            flex: auto;
-        }
-    </style>
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
 </head>
 <body>
     <header>
@@ -22,31 +18,21 @@
     <aside>
         {{ message }}
     </aside>
-    <section style="display: flex; flex-wrap: wrap;">
-        <div>
-            <h2>Inbox</h2>
-            <ul id="inbox-list">
-                {% for task in tasks %}
-                    {% include '_task_item.html' %}
-                {% endfor %}
-            </ul>
-            <form hx-post="{{ url_for('create_task') }}" hx-target="#inbox-list" hx-swap="beforeend">
-                <input type="text" name="title" placeholder="New task" required>
-                <button type="submit">Add</button>
-            </form>
-        </div>
-        <div>
-            <h2>Urgent</h2>
-            <ul>
-                <li> Item </li>
-            </ul>
-        </div>
-        <div>
-            <h2>Important</h2>
-            <ul>
-                <li> Item </li>
-            </ul>
-        </div>
+    <section class="board" id="board">
+        {% for category, tasks in board %}
+            {% include '_category_column.html' %}
+        {% endfor %}
     </section>
+    <form class="add-category"
+          hx-post="{{ url_for('categories.create') }}"
+          hx-target="#board"
+          hx-swap="beforeend"
+          hx-status:4xx="target:#add-category-error swap:innerHTML"
+          hx-status:5xx="swap:none">
+        <input type="text" name="name" placeholder="New category" aria-label="New category name" required>
+        <input type="color" name="color" value="#4a90d9" aria-label="Category colour">
+        <button type="submit">Add category</button>
+        <output id="add-category-error" class="form-error"></output>
+    </form>
 </body>
 </html>
