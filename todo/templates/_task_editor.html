@@ -1,0 +1,54 @@
+<dialog id="task-editor" class="task-editor" data-show-modal aria-labelledby="task-editor-heading">
+    <form hx-put="{{ url_for('tasks.update', task_id=task['id']) }}"
+          hx-target="#board"
+          hx-swap="outerHTML"
+          hx-status:4xx="target:#task-editor-error swap:innerHTML"
+          hx-status:5xx="swap:none">
+        <h2 id="task-editor-heading">Edit task</h2>
+
+        <label>
+            Title
+            <input type="text" name="title" value="{{ task['title'] }}" required autofocus>
+        </label>
+
+        <label>
+            Category
+            <select name="category_id">
+                {% for category in categories %}
+                    <option value="{{ category['id'] }}" {% if category['id'] == task['category_id'] %}selected{% endif %}>{{ category['name'] }}</option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label>
+            Contexts and tags
+            <input type="text" name="labels" placeholder="@home @phone #errand"
+                   value="{% for label in task['labels'] %}{{ '@' if label['kind'] == 'context' else '#' }}{{ label['name'] }} {% endfor %}">
+        </label>
+
+        <label>
+            Notes
+            <textarea name="notes" rows="5">{{ task['notes'] }}</textarea>
+        </label>
+
+        <label class="checkbox">
+            <input type="checkbox" name="completed" {% if task['completed_at'] %}checked{% endif %}>
+            Completed
+        </label>
+
+        <output id="task-editor-error" class="form-error"></output>
+
+        <div class="editor-actions">
+            <button type="button" class="danger"
+                    hx-delete="{{ url_for('tasks.delete', task_id=task['id']) }}"
+                    hx-confirm="Delete “{{ task['title'] }}”?"
+                    hx-target="#board"
+                    hx-swap="outerHTML"
+                    hx-status:4xx="target:#task-editor-error swap:innerHTML"
+                    hx-status:5xx="swap:none">Delete</button>
+            <span class="spacer"></span>
+            <button type="button" data-close-dialog>Cancel</button>
+            <button type="submit" class="primary">Save</button>
+        </div>
+    </form>
+</dialog>

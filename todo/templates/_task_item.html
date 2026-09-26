@@ -1,1 +1,19 @@
-<li>{{ task['title'] }}</li>
+<li class="task{% if task['completed_at'] %} task-completed{% endif %}" data-move-url="{{ url_for('tasks.move', task_id=task['id']) }}">
+    <button type="button" class="task-open"
+            hx-get="{{ url_for('tasks.edit', task_id=task['id']) }}"
+            hx-target="#task-editor"
+            hx-swap="outerHTML"
+            hx-status:4xx="swap:none">
+        <span class="task-title">{{ task['title'] }}</span>
+        {% if task['labels'] %}
+            <span class="task-labels">
+                {% for label in task['labels'] %}
+                    <span class="chip chip-{{ label['kind'] }}">{{ '@' if label['kind'] == 'context' else '#' }}{{ label['name'] }}</span>
+                {% endfor %}
+            </span>
+        {% endif %}
+        {% if task['notes'] %}
+            <span class="task-notes">{{ task['notes'] }}</span>
+        {% endif %}
+    </button>
+</li>

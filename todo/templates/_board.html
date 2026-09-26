@@ -1,0 +1,5 @@
+<section class="board" id="board" data-refresh-url="{{ url_for('board.fragment') }}">
+    {% for category, tasks in board %}
+        {% include '_category_column.html' %}
+    {% endfor %}
+</section>

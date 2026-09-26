@@ -6,7 +6,8 @@
     <title>Matho's ToDo Home</title>
 
     <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet" type="text/css" />
-    <script src="https://unpkg.com/htmx.org@4.0.0/dist/htmx.min.js"></script>
+    <script src="{{ url_for('static', filename='vendor/htmx.min.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='vendor/Sortable.min.js') }}" defer></script>
     <script src="{{ url_for('static', filename='app.js') }}" defer></script>
 </head>
 <body>
@@ -18,11 +19,7 @@
     <aside>
         {{ message }}
     </aside>
-    <section class="board" id="board">
-        {% for category, tasks in board %}
-            {% include '_category_column.html' %}
-        {% endfor %}
-    </section>
+    {% include '_board.html' %}
     <form class="add-category"
           hx-post="{{ url_for('categories.create') }}"
           hx-target="#board"
@@ -34,5 +31,6 @@
         <button type="submit">Add category</button>
         <output id="add-category-error" class="form-error"></output>
     </form>
+    <dialog id="task-editor" class="task-editor"></dialog>
 </body>
 </html>

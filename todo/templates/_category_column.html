@@ -1,6 +1,6 @@
 <article class="column" id="category-{{ category['id'] }}" style="--category-color: {{ category['color'] }}">
     <h2>{{ category['name'] }}</h2>
-    <ul class="task-list" id="category-{{ category['id'] }}-tasks">
+    <ul class="task-list" id="category-{{ category['id'] }}-tasks" data-category-id="{{ category['id'] }}">
         {% for task in tasks %}
             {% include '_task_item.html' %}
         {% endfor %}
